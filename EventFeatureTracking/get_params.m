@@ -1,4 +1,4 @@
-function [params] = get_params()
+function [params] = get_params(dataset)
 %GET_PARAMS sets a number of parameters for ebpda_main.
 % You must edit this file to change the parameters.
 %
@@ -23,10 +23,38 @@ function [params] = get_params()
 % THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 %% Main parameters to set
+params.dataset = dataset;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% boxes_6dof %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Path to load the data .mat file.
-params.data_path = '../data/indoor_flying1_data.mat';
+params.data_path = sprintf('/home/leecw/ecd_mat/%s.mat', dataset);
 % Path to load the undistort_map .mat file.
-params.undistort_map_path = '../data/left_undistort_map.mat';
+params.undistort_map_path = sprintf('../data/undistort_map_%s.mat', dataset);
+%%%%%%%%%%%%%%%%%%%%%%%%%%% boxes_rotation %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% params.data_path = '/home/leecw/ecd_mat/boxes_rotation.mat';
+% params.undistort_map_path = '../data/undistort_map_boxes_rotation.mat';
+%%%%%%%%%%%%%%%%%%%%%%%%% boxes_translation %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% params.data_path = '/home/leecw/ecd_mat/boxes_translation.mat';
+% params.undistort_map_path = '../data/undistort_map_boxes_translation.mat';
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% poster_6dof %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% params.data_path = '/home/leecw/ecd_mat/poster_6dof.mat';
+% params.undistort_map_path = '../data/undistort_map_poster_6dof.mat';
+%%%%%%%%%%%%%%%%%%%%%%%%%%% poster_rotation %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% params.data_path = '/home/leecw/ecd_mat/poster_rotation.mat';
+% params.undistort_map_path = '../data/undistort_map_poster_rotation.mat';
+%%%%%%%%%%%%%%%%%%%%%%%%% poster_translation %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% params.data_path = '/home/leecw/ecd_mat/poster_translation.mat';
+% params.undistort_map_path = '../data/undistort_map_poster_translation.mat';
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% shapes_6dof %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% params.data_path = '/home/leecw/ecd_mat/shapes_6dof.mat';
+% params.undistort_map_path = '../data/undistort_map_shapes_6dof.mat';
+%%%%%%%%%%%%%%%%%%%%%%%%%%% shapes_rotation %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% params.data_path = '/home/leecw/ecd_mat/shapes_rotation.mat';
+% params.undistort_map_path = '../data/undistort_map_shapes_rotation.mat';
+%%%%%%%%%%%%%%%%%%%%%%%%% shapes_translation %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% params.data_path = '/home/leecw/ecd_mat/shapes_translation.mat';
+% params.undistort_map_path = '../data/undistort_map_shapes_translation.mat';
+
+
 % Time in data to start in seconds.
 params.t_start = 5;
 % Time to stop in seconds. Set to -1 to finish at the end of the bag.
@@ -43,15 +71,15 @@ params.debug = false;
 % scene, needs to be larger than 3 pixels of motion roughly.
 params.def_int_time = 1;
 % Set to true to use the IMU rotations for RANSAC, as in EVIO.
-params.do_ransac = true;
+params.do_ransac = false;
 % If true, tracking will be done inside a parfor loop.
-params.do_parallel = true;
+params.do_parallel = false;
 % Do tracking.
 params.do_tracking = true;
 % Set to true for no plots at all
 params.headless = false;
 % Set to true to use the IMU rotations for the affine step (as in EVIO).
-params.use_imu = true;
+params.use_imu = false;
 % Size of feature window.
 params.window_size = 31;
 

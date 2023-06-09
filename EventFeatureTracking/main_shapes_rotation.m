@@ -150,6 +150,9 @@ event_iter = events_start;
 total_time = 0;
    
 log_cell = {}; % (cwlee)
+dir_path = sprintf('/home/leecw/Reps/event_feature_tracking/EventFeatureTracking/Results/%s', params.dataset);
+fprintf("save dir: %s", dir_path);
+mkdir_status = mkdir(dir_path);
 
 %% Main loop
 while event_iter < events_end
@@ -161,13 +164,15 @@ while event_iter < events_end
     end
     
     % Find end of next temporal window
-    new_event_iter = find(int_time+event_t0 <= events_zeroed(3, event_iter:event_iter+params.max_events_per_window), 1);
+    event_max = min(event_iter+params.max_events_per_window, events_end);
+    new_event_iter = find(int_time+event_t0 <= events_zeroed(3, event_iter:event_max), 1);
     % Either the temporal window size is met, or max events have arrived
-    if new_event_iter ~= -1
-        event_iter = event_iter + new_event_iter - 1;
-    else
-        event_iter = event_iter + params.max_events_per_window;
-    end
+    event_iter = min(event_iter+params.max_events_per_window, events_end);
+    % if new_event_iter ~= -1
+    %     event_iter = event_iter + new_event_iter - 1;
+    % else
+    %     event_iter = event_iter + params.max_events_per_window;
+    % end
     
     fprintf('\nIteration %d, time %f, dt %f, num_events %d, total run time: %f\n----------------------\n', ...
         num_ima, ...
@@ -243,6 +248,15 @@ while event_iter < events_end
                             new_track = [event_t0 feature_positions(1, i) feature_positions(2, i)]';
                             log_cell{id} = [log_cell{id} new_track];
                             % size(log_cell{id})
+                        end
+
+                        if is_valid(i) < 1.0
+                            id = ids(i);
+                            fprintf("Save id %d!!\n", id);
+                            new_track = [event_t0 feature_positions(1, i) feature_positions(2, i)]';
+                            log_cell{id} = [log_cell{id} new_track];
+                            save_fn = sprintf('/home/leecw/Reps/event_feature_tracking/EventFeatureTracking/Results/%s/%d.csv', params.dataset, id);
+                            writematrix(log_cell{id}', save_fn);
                         end
                     end
                 end
@@ -391,9 +405,6 @@ while event_iter < events_end
     total_time = total_time + toc;
 end
 
-dir_path = sprintf('/home/leecw/Reps/event_feature_tracking/EventFeatureTracking/Results/%s', params.dataset);
-fprintf("save dir: %s", dir_path);
-mkdir_status = mkdir(dir_path);
 for i=1:size(log_cell, 2)
     save_fn = sprintf('/home/leecw/Reps/event_feature_tracking/EventFeatureTracking/Results/%s/%d.csv', params.dataset, i);
     writematrix(log_cell{i}', save_fn);
