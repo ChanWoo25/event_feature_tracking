@@ -46,7 +46,8 @@ if (exist('dataset_loaded', 'var') == 0) || ~strcmp(params.data_path, dataset_lo
     
     pix_to_ideal = @(loc)(bsxfun(@rdivide, bsxfun(@minus, loc, [px;py]), [fx;fy]));    
     davis_t0 = events(3,1);
-    
+    fprintf("Davis t0: %.8f", davis_t0);
+
     events_zeroed = events;
     % Timestamps should start at 0.
     events_zeroed(3,:) = events_zeroed(3,:)-davis_t0;
@@ -150,7 +151,7 @@ event_iter = events_start;
 total_time = 0;
    
 log_cell = {}; % (cwlee)
-dir_path = sprintf('/home/leecw/Reps/event_feature_tracking/EventFeatureTracking/Results/%s', params.dataset);
+dir_path = sprintf('/home/leecw/Reps/event_feature_tracking/EventFeatureTracking/Results/%s_2', params.dataset);
 fprintf("save dir: %s", dir_path);
 mkdir_status = mkdir(dir_path);
 
@@ -255,7 +256,7 @@ while event_iter < events_end
                             fprintf("Save id %d!!\n", id);
                             new_track = [event_t0 feature_positions(1, i) feature_positions(2, i)]';
                             log_cell{id} = [log_cell{id} new_track];
-                            save_fn = sprintf('/home/leecw/Reps/event_feature_tracking/EventFeatureTracking/Results/%s/%d.csv', params.dataset, id);
+                            save_fn = sprintf('%s/%d.csv', dir_path, id);
                             writematrix(log_cell{id}', save_fn);
                         end
                     end
@@ -406,7 +407,7 @@ while event_iter < events_end
 end
 
 for i=1:size(log_cell, 2)
-    save_fn = sprintf('/home/leecw/Reps/event_feature_tracking/EventFeatureTracking/Results/%s/%d.csv', params.dataset, i);
+    save_fn = sprintf('%s/%d.csv', dir_path, i);
     writematrix(log_cell{i}', save_fn);
 end 
 
